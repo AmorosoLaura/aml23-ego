@@ -99,7 +99,6 @@ def save_feat(model, loader, device, it, num_classes):
                 data[m] = data[m].reshape(batch, args.save.num_clips,
                                           args.save.num_frames_per_clip[m], -1, height, width)
                 data[m] = data[m].permute(1, 0, 3, 2, 4, 5)
-
                 logits[m] = torch.zeros((args.save.num_clips, batch, num_classes)).to(device)
                 features[m] = torch.zeros((args.save.num_clips, batch, model.task_models[m]
                                            .module.feat_dim)).to(device)
@@ -130,8 +129,11 @@ def save_feat(model, loader, device, it, num_classes):
                                                                           model.accuracy.avg[1], model.accuracy.avg[5]))
 
         os.makedirs("saved_features", exist_ok=True)
+        sampling_modality = "dense" if args.save.dense_sampling['RGB'] else "uniform"
         pickle.dump(results_dict, open(os.path.join("saved_features", args.name + "_" +
                                                     args.dataset.shift.split("-")[1] + "_" +
+                                                    str(args.save.num_frames_per_clip['RGB']) + "_" +
+                                                    sampling_modality + "_" +
                                                     args.split + ".pkl"), 'wb'))
 
         class_accuracies = [(x / y) * 100 for x, y in zip(model.accuracy.correct, model.accuracy.total)]
