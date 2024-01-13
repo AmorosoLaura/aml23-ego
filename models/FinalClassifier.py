@@ -2,7 +2,7 @@ from torch import nn
 
 
 class MLP_classifier(nn.Module):
-    def __init__(self, num_classes, input_size=1024):
+    def __init__(self, num_classes=8, input_size=1024):
         super().__init__()
 
         self.fc1 = nn.Linear(input_size, 512)
@@ -11,10 +11,12 @@ class MLP_classifier(nn.Module):
         self.fc2 = nn.Linear(512, num_classes)
 
     def forward(self, x):
+        print(f"input shape: {x.shape}")
         x = self.fc1(x)
         x = self.relu(x)
         x = self.dropout(x)
         x = self.fc2(x)
+        print(f"final shape: {x.shape}")
         return x, {}
 
 class MLP_aggregation_classifier(nn.Module):
