@@ -1,3 +1,5 @@
 from models.VideoModel import VideoModel
 from models.I3D import I3D
-from models.FinalClassifier import Classifier
+from models.FinalClassifier import MLP_classifier, MLP_aggregation_classifier
+from models.Lstm_classifier import Lstm_classifier
+from models.Transformer_classifier import Transformer_classifier

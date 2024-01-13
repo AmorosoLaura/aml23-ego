@@ -56,7 +56,7 @@ def main():
         logger.info('{} Net\tModality: {}'.format(args.models[m].model, m))
         # notice that here, the first parameter passed is the input dimension
         # In our case it represents the feature dimensionality which is equivalent to 1024 for I3D
-        models[m] = getattr(model_list, args.models[m].model)(8)
+        models[m] = getattr(model_list, args.models[m].model)(batch_normalization=True)
 
     # the models are wrapped into the ActionRecognition task which manages all the training steps
     action_classifier = tasks.ActionRecognition("action-classifier", models, args.batch_size,
@@ -148,15 +148,22 @@ def train(action_classifier, train_loader, val_loader, device, num_classes):
         source_label = source_label.to(device)
         data = {}
 
-        for clip in range(args.train.num_clips):
-            # in case of multi-clip training one clip per time is processed
+        if args.aggregation:
             for m in modalities:
-                data[m] = source_data[m][:, clip].to(device)
-
+                data[m] = source_data[m].to(device)
             logits, _ = action_classifier.forward(data)
             action_classifier.compute_loss(logits, source_label, loss_weight=1)
             action_classifier.backward(retain_graph=False)
             action_classifier.compute_accuracy(logits, source_label)
+        else:
+            for clip in range(args.train.num_clips):
+            # in case of multi-clip training one clip per time is processed
+                for m in modalities:
+                    data[m] = source_data[m][:, clip].to(device)
+                logits, _ = action_classifier.forward(data)
+                action_classifier.compute_loss(logits, source_label, loss_weight=1)
+                action_classifier.backward(retain_graph=False)
+                action_classifier.compute_accuracy(logits, source_label)
 
         # update weights and zero gradients if total_batch samples are passed
         if gradient_accumulation_step:
@@ -210,22 +217,34 @@ def validate(model, val_loader, device, it, num_classes):
                 logits[m] = torch.zeros((args.test.num_clips, batch, num_classes)).to(device)
 
             clip = {}
-            for i_c in range(args.test.num_clips):
+            if args.aggregation:
                 for m in modalities:
-                    clip[m] = data[m][:, i_c].to(device)
+                    clip[m] = data[m].to(device)
 
                 output, _ = model(clip)
                 for m in modalities:
-                    logits[m][i_c] = output[m]
+                    logits[m] = output[m]
 
-            for m in modalities:
-                logits[m] = torch.mean(logits[m], dim=0)
+
+            else:
+                for i_c in range(args.train.num_clips):
+                    for m in modalities:
+                        clip[m] = data[m][:, i_c].to(device)
+
+                    output, _ = model(clip)
+                    for m in modalities:
+                        logits[m][i_c] = output[m]
+
+                for m in modalities:
+                    logits[m] = torch.mean(logits[m], dim=0)
+
 
             model.compute_accuracy(logits, label)
 
             if (i_val + 1) % (len(val_loader) // 5) == 0:
                 logger.info("[{}/{}] top1= {:.3f}% top5 = {:.3f}%".format(i_val + 1, len(val_loader),
-                                                                          model.accuracy.avg[1], model.accuracy.avg[5]))
+                                                                          model.accuracy.avg[1],
+                                                                          model.accuracy.avg[5]))
 
         class_accuracies = [(x / y) * 100 for x, y in zip(model.accuracy.correct, model.accuracy.total)]
         logger.info('Final accuracy: top1 = %.2f%%\ttop5 = %.2f%%' % (model.accuracy.avg[1],
