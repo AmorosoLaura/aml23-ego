@@ -1,0 +1,6 @@
+# Default ignored files
+/.idea
+/ek_data
+/Experiment_logs
+*.pth
+*.pyc
