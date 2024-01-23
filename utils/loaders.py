@@ -60,10 +60,11 @@ class EpicKitchensDataset(data.Dataset, ABC):
             self.model_features = None
             for m in self.modalities:
                 # load features for each modality
+                sampling_mode = "dense" if self.dense_sampling['RGB'] else "uniform"
                 model_features = pd.DataFrame(pd.read_pickle(os.path.join("saved_features",
                                                                           self.dataset_conf[m].features_name + "_" +
                                                                           str(self.num_frames_per_clip[m]) + "_" +
-                                                                          "dense" + "_" +
+                                                                          sampling_mode + "_" +
                                                                           pickle_name))['features'])[["uid", "features_" + m]]
                 if self.model_features is None:
                     self.model_features = model_features

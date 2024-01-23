@@ -134,8 +134,8 @@ def save_feat(model, loader, device, it, num_classes, num_frames):
         sampling_modality = "dense" if args.save.dense_sampling['RGB'] else "uniform"
         pickle.dump(results_dict, open(os.path.join("saved_features", args.name + "_" +
                                                     str(num_frames['RGB']) + "_" +
-                                                    args.dataset.shift.split("-")[1] + "_" +
                                                     sampling_modality + "_" +
+                                                    args.dataset.shift.split("-")[1] + "_" +
                                                     args.split + ".pkl"), 'wb'))
 
         class_accuracies = [(x / y) * 100 for x, y in zip(model.accuracy.correct, model.accuracy.total)]
