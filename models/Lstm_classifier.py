@@ -2,23 +2,19 @@ from torch import nn
 
 
 class Lstm_classifier(nn.Module):
-    def __init__(self, num_classes=8, input_size=1024, batch_normalization=False):
+    def __init__(self, num_classes=8, input_size=1024, hidden_size=512, dropout_prob=0.5):
         super().__init__()
 
-        self.lstm = nn.LSTM(input_size, hidden_size=512, num_layers=1, batch_first=True)
-        self.use_batch = batch_normalization
-        self.batch_norm = nn.BatchNorm1d(512)
-        self.fc = nn.Linear(512, num_classes)
-
+        self.lstm = nn.LSTM(input_size, hidden_size=hidden_size, num_layers=1, batch_first=True)
+        self.dropout = nn.Dropout(dropout_prob)
+        self.relu = nn.ReLU()
+        self.fc = nn.Linear(hidden_size, num_classes)
 
     def forward(self, x):
-        # Forward pass
+
         out, _ = self.lstm(x)
-        if self.use_batch:
-            out = out.permute(0, 2, 1)  # Permute to match the input shape of BatchNorm2d
-            out = self.batch_norm(out)
-            out = out.permute(0, 2, 1)  # Permute back to the original shape
-        out = nn.ReLU()(out)
-        out = self.fc(out[:, -1, :])
+        out = self.dropout(out)
+        out = self.relu(out)
+        out = self.fc(out[:, -1, :]) # extract the last output of the sequence (the one obtained after all the timesteps)
 
         return out, {}
