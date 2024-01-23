@@ -133,8 +133,8 @@ def save_feat(model, loader, device, it, num_classes, num_frames):
         os.makedirs("saved_features", exist_ok=True)
         sampling_modality = "dense" if args.save.dense_sampling['RGB'] else "uniform"
         pickle.dump(results_dict, open(os.path.join("saved_features", args.name + "_" +
-                                                    args.dataset.shift.split("-")[1] + "_" +
                                                     str(num_frames['RGB']) + "_" +
+                                                    args.dataset.shift.split("-")[1] + "_" +
                                                     sampling_modality + "_" +
                                                     args.split + ".pkl"), 'wb'))
 
