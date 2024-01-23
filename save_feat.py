@@ -59,20 +59,22 @@ def main():
     if args.action == "save":
         augmentations = {"train": train_augmentations, "test": test_augmentations}
         # the only action possible with this script is "save"
-        loader = torch.utils.data.DataLoader(EpicKitchensDataset(args.dataset.shift.split("-")[1], modalities,
+        num_frames_per_clip = [{"RGB": 5}, {"RGB": 10}, {"RGB": 25}]
+        for num_frames in num_frames_per_clip:
+            loader = torch.utils.data.DataLoader(EpicKitchensDataset(args.dataset.shift.split("-")[1], modalities,
                                                                  args.split, args.dataset,
-                                                                 args.save.num_frames_per_clip,
+                                                                 num_frames,
                                                                  args.save.num_clips, args.save.dense_sampling,
                                                                  augmentations[args.split], additional_info=True,
                                                                  **{"save": args.split}),
                                              batch_size=1, shuffle=False,
                                              num_workers=args.dataset.workers, pin_memory=True, drop_last=False)
-        save_feat(action_classifier, loader, device, action_classifier.current_iter, num_classes)
+            save_feat(action_classifier, loader, device, action_classifier.current_iter, num_classes, num_frames)
     else:
         raise NotImplementedError
 
 
-def save_feat(model, loader, device, it, num_classes):
+def save_feat(model, loader, device, it, num_classes, num_frames):
     """
     function to validate the model on the test set
     model: Task containing the model to be tested
@@ -97,7 +99,7 @@ def save_feat(model, loader, device, it, num_classes):
             for m in modalities:
                 batch, _, height, width = data[m].shape
                 data[m] = data[m].reshape(batch, args.save.num_clips,
-                                          args.save.num_frames_per_clip[m], -1, height, width)
+                                          num_frames[m], -1, height, width)
                 data[m] = data[m].permute(1, 0, 3, 2, 4, 5)
                 logits[m] = torch.zeros((args.save.num_clips, batch, num_classes)).to(device)
                 features[m] = torch.zeros((args.save.num_clips, batch, model.task_models[m]
@@ -132,7 +134,7 @@ def save_feat(model, loader, device, it, num_classes):
         sampling_modality = "dense" if args.save.dense_sampling['RGB'] else "uniform"
         pickle.dump(results_dict, open(os.path.join("saved_features", args.name + "_" +
                                                     args.dataset.shift.split("-")[1] + "_" +
-                                                    str(args.save.num_frames_per_clip['RGB']) + "_" +
+                                                    str(num_frames['RGB']) + "_" +
                                                     sampling_modality + "_" +
                                                     args.split + ".pkl"), 'wb'))
 

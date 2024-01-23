@@ -81,19 +81,16 @@ class EpicKitchensDataset(data.Dataset, ABC):
         # Remember that the returned array should have size              #
         #           num_clip x num_frames_per_clip                       #
         ##################################################################
-        print("is dense sampling train:", self.dense_sampling[modality])
         if self.dense_sampling[modality]:
 
-            # selecting one frame and discarding another (alternation), to avoid duplicates
             center_frames = np.linspace(0, record.num_frames[modality], self.num_clips + 2,
                                         dtype=np.int32)[1:-1]
 
-            indices = [x for center in center_frames for x in
-                       range(center - math.ceil(self.num_frames_per_clip[modality] / 2 * self.stride),
-                             # start of the segment
-                             center + math.ceil(self.num_frames_per_clip[modality] / 2 * self.stride),
-                             # end of the segment
-                             self.stride)]  # step of the sampling
+            indices = []
+            for center in center_frames:
+                start = center - math.ceil(self.num_frames_per_clip[modality] / 2 * self.stride)
+                end = center + math.ceil(self.num_frames_per_clip[modality] / 2 * self.stride)
+                indices.extend(np.arange(start, end, self.stride))
 
             offset = -indices[0] if indices[0] < 0 else 0
             for i in range(0, len(indices), self.num_frames_per_clip[modality]):
@@ -102,24 +99,18 @@ class EpicKitchensDataset(data.Dataset, ABC):
                     indices[i + j] = indices[i + j] + offset if indices_old < 0 else indices[i + j]
                     indices[i + j] = record.num_frames[modality] if indices[i+j] > record.num_frames[modality] else indices[i+j]
 
-            return indices
         else:
-            indices = []
-            # average_duration is the average stride among frames in the clip to obtain a uniform sampling BUT
-            # the randint shifts a little (to add randomicity among clips)
             average_duration = record.num_frames[modality] // self.num_frames_per_clip[modality]
             if average_duration > 0:
-                for _ in range(self.num_clips):
-                    frame_idx = np.multiply(list(range(self.num_frames_per_clip[modality])), average_duration) + \
-                                randint(average_duration, size=self.num_frames_per_clip[modality])
-                    indices.extend(frame_idx.tolist())
+                frame_idx = np.multiply(np.arange(self.num_frames_per_clip[modality]), average_duration) + \
+                            np.random.randint(average_duration, size=self.num_frames_per_clip[modality])
+                indices = np.tile(frame_idx, self.num_clips)
             else:
                 indices = np.zeros((self.num_frames_per_clip[modality] * self.num_clips,))
-            indices = np.asarray(indices)
 
         return indices
 
-        #raise NotImplementedError("You should implement _get_train_indices")
+
 
     def _get_val_indices(self, record, modality):
         ##################################################################
@@ -130,54 +121,35 @@ class EpicKitchensDataset(data.Dataset, ABC):
         # Remember that the returned array should have size              #
         #           num_clip x num_frames_per_clip                       #
         ##################################################################
-        max_frame_idx = max(1, record.num_frames[modality])
-        print("is dense sampling val:", self.dense_sampling[modality])
         if self.dense_sampling[modality]:
-            n_clips = self.num_clips
-            center_frames = np.linspace(0, record.num_frames[modality], n_clips + 2, dtype=np.int32)[1:-1]
 
-            indices = [x for center in center_frames for x in
-                       range(center - math.ceil(self.num_frames_per_clip[modality] / 2 * self.stride),
-                             # start of the segment
-                             center + math.ceil(self.num_frames_per_clip[modality] / 2 * self.stride),
-                             # end of the segment
-                             self.stride)]  # step of the sampling
+            center_frames = np.linspace(0, record.num_frames[modality], self.num_clips + 2,
+                                        dtype=np.int32)[1:-1]
 
+            indices = []
+            for center in center_frames:
+                start = center - math.ceil(self.num_frames_per_clip[modality] / 2 * self.stride)
+                end = center + math.ceil(self.num_frames_per_clip[modality] / 2 * self.stride)
+                indices.extend(np.arange(start, end, self.stride))
 
             offset = -indices[0] if indices[0] < 0 else 0
             for i in range(0, len(indices), self.num_frames_per_clip[modality]):
                 indices_old = indices[i]
                 for j in range(self.num_frames_per_clip[modality]):
                     indices[i + j] = indices[i + j] + offset if indices_old < 0 else indices[i + j]
-                    indices[i + j] = record.num_frames[modality] if indices[i+j] > record.num_frames[modality] else indices[i+j]
+                    indices[i + j] = record.num_frames[modality] if indices[i + j] > record.num_frames[modality] else \
+                    indices[i + j]
 
+        else:
+            average_duration = record.num_frames[modality] // self.num_frames_per_clip[modality]
+            if average_duration > 0:
+                frame_idx = np.multiply(np.arange(self.num_frames_per_clip[modality]), average_duration) + \
+                            np.random.randint(average_duration, size=self.num_frames_per_clip[modality])
+                indices = np.tile(frame_idx, self.num_clips)
+            else:
+                indices = np.zeros((self.num_frames_per_clip[modality] * self.num_clips,))
 
-            return indices
-
-        else:  # uniform sampling
-            # Code for "Deep Analysis of CNN-based Spatio-temporal Representations for Action Recognition"
-            # arXiv: 2104.09952v1
-            # Yuan Zhi, Zhan Tong, Limin Wang, Gangshan Wu
-            frame_idices = []
-            sample_offsets = list(range(-self.num_clips // 2 + 1, self.num_clips // 2 + 1))
-            for sample_offset in sample_offsets:
-                if max_frame_idx > self.num_frames_per_clip[modality]:
-                    tick = max_frame_idx / float(self.num_frames_per_clip[modality])
-                    curr_sample_offset = sample_offset
-                    if curr_sample_offset >= tick / 2.0:
-                        curr_sample_offset = tick / 2.0 - 1e-4
-                    elif curr_sample_offset < -tick / 2.0:
-                        curr_sample_offset = -tick / 2.0
-                    frame_idx = np.array([int(tick / 2.0 + curr_sample_offset + tick * x) for x
-                                          in range(self.num_frames_per_clip[modality])])
-                else:
-                    np.random.seed(sample_offset - (-self.num_clips // 2 + 1))
-                    frame_idx = np.random.choice(max_frame_idx, self.num_frames_per_clip[modality])
-                frame_idx = np.sort(frame_idx)
-                frame_idices.extend(frame_idx.tolist())
-            frame_idx = np.asarray(frame_idices)
-            return frame_idx
-        #raise NotImplementedError("You should implement _get_val_indices")
+        return indices
 
     def __getitem__(self, index):
 

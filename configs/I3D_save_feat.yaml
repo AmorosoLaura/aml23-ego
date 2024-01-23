@@ -6,18 +6,18 @@ resume_from: ./saved_models/I3D_SourceOnlyD1
 save:
   num_clips: 5
   dense_sampling:
-    RGB: True
+    RGB: false
   num_frames_per_clip:
     RGB: 16
 
 dataset:
   annotations_path: train_val
-  shift: ???
+  shift: D1-D1
   workers: 4
   stride: 2
   resolution: 224
   RGB:
-    data_path: ???
+    data_path: ek_data/frames
     tmpl: "img_{:010d}.jpg"
   Event:
     rgb4e: 6
@@ -35,5 +35,6 @@ models:
     sgd_momentum: 0.9
     weight_decay: 1e-7
     weight_i3d_rgb: './pretrained_i3d/rgb_imagenet.pt'
+
 
 
