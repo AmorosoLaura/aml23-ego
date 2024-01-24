@@ -75,14 +75,14 @@ def main():
         # all dataloaders are generated here
         train_loader = torch.utils.data.DataLoader(EpicKitchensDataset(args.dataset.shift.split("-")[0], modalities,
                                                                        'train', args.dataset, args.train.num_frames_per_clip,
-                                                                       args.train.num_clips, args.train.dense_ssampling,
+                                                                       args.train.num_clips, args.train.dense_sampling,
                                                                        None, load_feat=True),
                                                    batch_size=args.batch_size, shuffle=True,
                                                    num_workers=args.dataset.workers, pin_memory=True, drop_last=True)
 
         val_loader = torch.utils.data.DataLoader(EpicKitchensDataset(args.dataset.shift.split("-")[-1], modalities,
                                                                      'val', args.dataset, args.train.num_frames_per_clip,
-                                                                       args.train.num_clips, args.train.dense_ssampling,
+                                                                       args.train.num_clips, args.train.dense_sampling,
                                                                      None, load_feat=True),
                                                  batch_size=args.batch_size, shuffle=False,
                                                  num_workers=args.dataset.workers, pin_memory=True, drop_last=False)
@@ -93,7 +93,7 @@ def main():
             action_classifier.load_last_model(args.resume_from)
         val_loader = torch.utils.data.DataLoader(EpicKitchensDataset(args.dataset.shift.split("-")[-1], modalities,
                                                                      'val', args.dataset, args.train.num_frames_per_clip,
-                                                                     args.train.num_clips, args.train.dense_ssampling,
+                                                                     args.train.num_clips, args.train.dense_sampling,
                                                                      None, load_feat=True),
                                                  batch_size=args.batch_size, shuffle=False,
                                                  num_workers=args.dataset.workers, pin_memory=True, drop_last=False)
