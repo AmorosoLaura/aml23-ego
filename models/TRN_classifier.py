@@ -82,7 +82,7 @@ class RelationModuleMultiScale(torch.nn.Module):
 
 class TRN_classifier(torch.nn.Module):
     # relation module in multi-scale with a classifier at the end
-    def __init__(self, img_feature_dim=1024, num_frames=5, num_class=8, dropout=0):
+    def __init__(self, img_feature_dim=1024, num_frames=5, num_class=21, dropout=0.6):
         super(TRN_classifier, self).__init__()
         self.subsample_num = 3 # how many relations selected to sum up
         self.img_feature_dim = img_feature_dim
@@ -135,7 +135,7 @@ class TRN_classifier(torch.nn.Module):
                 act_relation = self.fc_fusion_scales[scaleID](act_relation)
                 act_relation = self.classifier_scales[scaleID](act_relation)
                 act_all += act_relation
-        return act_all
+        return act_all, {'features': x}
 
     def return_relationset(self, num_frames, num_frames_relation):
         import itertools
