@@ -2,7 +2,7 @@
 /.idea
 /ek_data
 /Experiment_logs
-/action-net/action-net_RGB
-/action-net-frames
+/action-net/video
+/action-net/frames
 *.pth
 *.pyc
