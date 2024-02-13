@@ -28,15 +28,15 @@ test:
     RGB: 5
 
 dataset:
-  annotations_path: train_val # path for the annotations data
-  shift: D1-D1 # shifts of the dataset
+  annotations_path: action_net_annotations # path for the annotations data
+  shift: S04-S04 # shifts of the dataset
   workers: 4 # number of workers for the dataloader
   stride: 2 # stride in case of dense sampling
   resolution: 224 # input resolution to the model
   RGB:
-    data_path: saved_features # folder to pkl data
+    data_path: saved_features_action_net # folder to pkl data
     tmpl: "img_{:010d}.jpg" # format of RGB filenames
-    features_name: saved_features # name of the pkl file
+    features_name: features_action_net # name of the pkl file
   Event: # not neeeded for the project
     rgb4e: 6
 
