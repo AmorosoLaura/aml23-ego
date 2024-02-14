@@ -53,8 +53,8 @@ def main():
                                                 args.total_batch, args.models_dir, num_classes,
                                                 args.save.num_clips, args.models, args=args)
     action_classifier.load_on_gpu(device)
-    #if args.resume_from is not None:
-        #action_classifier.load_last_model(args.resume_from)
+    if args.resume_from is not None:
+        action_classifier.load_last_model(args.resume_from)
 
     if args.action == "save":
         augmentations = {"train": train_augmentations, "test": test_augmentations}
@@ -125,11 +125,11 @@ def save_feat(model, loader, device, it, num_classes, num_frames):
                 results_dict["features"].append(sample)
             num_samples += batch
 
-            model.compute_accuracy(logits, label)
+            #model.compute_accuracy(logits, label)
 
-            if (i_val + 1) % (len(loader) // 5) == 0:
-                logger.info("[{}/{}] top1= {:.3f}% top5 = {:.3f}%".format(i_val + 1, len(loader),
-                                                                          model.accuracy.avg[1], model.accuracy.avg[5]))
+            #if (i_val + 1) % (len(loader) // 5) == 0:
+            #    logger.info("[{}/{}] top1= {:.3f}% top5 = {:.3f}%".format(i_val + 1, len(loader),
+            #                                                              model.accuracy.avg[1], model.accuracy.avg[5]))
 
         os.makedirs("saved_features_action_net", exist_ok=True)
         sampling_modality = "dense" if args.save.dense_sampling['RGB'] else "uniform"
