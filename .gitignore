@@ -4,5 +4,6 @@
 /Experiment_logs
 /action-net/video
 /action-net/frames
+/TEST_RESULTS
 *.pth
 *.pyc
