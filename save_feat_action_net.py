@@ -59,7 +59,7 @@ def main():
     if args.action == "save":
         augmentations = {"train": train_augmentations, "test": test_augmentations}
         # the only action possible with this script is "save"
-        num_frames_per_clip = [{"RGB": 5}, {"RGB": 10}, {"RGB": 25}]
+        num_frames_per_clip = [{"RGB": 16}]
         for num_frames in num_frames_per_clip:
             loader = torch.utils.data.DataLoader(EpicKitchensDataset(args.dataset.shift.split("-")[1], modalities,
                                                                  args.split, args.dataset,
