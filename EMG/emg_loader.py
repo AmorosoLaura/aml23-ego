@@ -8,9 +8,8 @@ from torch.utils.data import Dataset
 import os
 
 # labels taken from the official code of the ActionSense dataset
-baseline_label = 'None'
+
 activities_to_classify = [
-   baseline_label,
   'Get/replace items from refrigerator/cabinets/drawers',
   'Peel a cucumber',
   'Clear cutting board',
@@ -42,8 +41,18 @@ class EMG_dataset(Dataset):
     def __getitem__(self, idx):
         emg, label = self.df[idx]['emg_data'],self.df[idx]['label']
         if label== 'Get items from refrigerator/cabinets/drawers' or label== 'Replace items from refrigerator/cabinets/drawers' :
-            return (emg, 1)
+            emg = torch.tensor(emg, dtype=torch.float32)
+            label = torch.tensor(0)
+            emg = {"EMG": emg.unsqueeze(0)} 
+            return emg,label 
         elif label=='Open a jar of almond butter' or label=='Close a jar of almond butter':
-            return (emg,10)
-        return (emg, activities_to_classify.index(label))
+            emg = torch.tensor(emg, dtype=torch.float32)
+            label = torch.tensor(9)
+            emg = {"EMG": emg.unsqueeze(0)} 
+            return emg,label 
+           
+        emg = torch.tensor(emg, dtype=torch.float32)
+        label = torch.tensor(activities_to_classify.index(label))
+        emg = {"EMG": emg.unsqueeze(0)} 
+        return emg,label
 

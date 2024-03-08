@@ -1,0 +1,36 @@
+action: train # train or test
+name: training # name of the experiment needed for the logs
+modality: ["EMG"] 
+total_batch: 64
+batch_size: 32 # batch size for the forward
+gpus: null # gpus adopted
+resume_from: null # checkpoint directory
+logname: null # name of the logs
+models_dir: models # directory containing all the models
+wandb_dir: null # directory for the wandb logs
+aggregation: False
+wandb_name: null
+augmentation: False
+
+train:
+  num_clips: 1    
+  num_iter: 300 # number of training iterations with total_batch size
+  lr_steps: 100 # steps before reducing learning rate
+  eval_freq: 50 # evaluation frequency
+
+test:
+  num_clips: 1       # number of clips in testing
+  dense_sampling:      # sampling version adopted in test for each modality
+    RGB: True
+  num_frames_per_clip: # number of frames adopted in test for each modality
+    RGB: 16
+
+
+models: # models adopted              # Model for each modality
+  EMG:
+    model: ???  # model name
+    lr_steps: 100
+    lr: 0.01
+    sgd_momentum: 0.9
+    weight_decay: 1e-7
+  RGB:

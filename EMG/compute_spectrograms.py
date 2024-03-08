@@ -5,6 +5,9 @@ import torchaudio.transforms as T
 import pickle
 import pandas as pd
 
+import librosa
+import matplotlib.pyplot as plt
+
 activities_to_classify = [
   'Get/replace items from refrigerator/cabinets/drawers',
   'Peel a cucumber',
@@ -28,6 +31,20 @@ activities_to_classify = [
   'Unload dishwasher: 3 each large/small plates, bowls, mugs, glasses, sets of utensils',
 ]
 
+def plot_spectrogram(specgram, title=None, ylabel="freq_bin"):
+    fig, axs = plt.subplots(len(specgram), 1, figsize=(16, 8))
+
+    axs[0].set_title(title or "Spectrogram (db)")
+
+    for i, spec in enumerate(specgram):
+        im = axs[i].imshow(librosa.power_to_db(specgram[i]), origin="lower", aspect="auto")
+        axs[i].get_xaxis().set_visible(False)
+        axs[i].get_yaxis().set_visible(False)
+
+    axs[i].set_xlabel("Frame number")
+    axs[i].get_xaxis().set_visible(True)
+    plt.show(block=False)
+
 # Sampling frequency is 160 Hz
 # With 32 samples the frequency resolution after FFT is 160 / 32
 
@@ -46,30 +63,22 @@ spectrogram = T.Spectrogram(
 )
 
 
-def cut_and_pad(signal, sampling_rate, seconds):
-    required_length = sampling_rate * seconds
-    padded_signal = torch.zeros((required_length,16))
-   
-    if signal.shape[0] < required_length:
-        padded_signal[:signal.shape[0]] = signal
-    else:
-        padded_signal[:required_length] = signal[:required_length]
-
-    return padded_signal
 
 if __name__ == '__main__':
 
-    next_key=0
+  
 
     for split in ['train', 'test']:
-
+        next_key=0
         print(split)
         spectrograms={}
    
-        emg_annotations = pd.read_pickle("./emg_data_preprocessed_"+split+".pkl")
+        emg_annotations = pd.read_pickle("C:/Users/Laura/Desktop/Universita/Polito/Advanced Machine Learning/cartella_condivisa_git/aml23-ego/EMG_data/emg_data_preprocessed_"+split+".pkl")
         for sample in emg_annotations.values():
             signal = torch.from_numpy(sample['emg_data']).float()
-            signal=cut_and_pad(signal,160,30)
+            signal=[spectrogram(signal[:, i]) for i in range(16)]
+    
+            #signal=cut_and_pad(signal,160,30)
             
             label=sample['label']
             if label== 'Get items from refrigerator/cabinets/drawers' or label== 'Replace items from refrigerator/cabinets/drawers' :
@@ -81,11 +90,11 @@ if __name__ == '__main__':
             else:
                 spectrograms[next_key]={'spectrogram': signal, 'label': activities_to_classify.index(sample['label'])}
             next_key+=1
+            plot_spectrogram(signal)
         
-
         labels = [value['label'] for value in spectrograms.values()]
 
         print(labels)
         
-        with open('./EMG_data/emg_spectrogram_'+split+'.pkl', 'wb') as f_pickle:
+        with open('C:/Users/Laura/Desktop/Universita/Polito/Advanced Machine Learning/cartella_condivisa_git/aml23-ego/EMG_data/emg_spectrogram_'+split+'.pkl', 'wb') as f_pickle:
             pickle.dump(spectrograms, f_pickle)
