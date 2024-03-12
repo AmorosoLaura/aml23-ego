@@ -28,7 +28,7 @@ test:
     RGB: 5
 
 dataset:
-  annotations_path: action_net_annotations # path for the annotations data
+  annotations_path: action_net_annotations_training # path for the annotations data
   shift: S04-S04 # shifts of the dataset
   workers: 4 # number of workers for the dataloader
   stride: 2 # stride in case of dense sampling
