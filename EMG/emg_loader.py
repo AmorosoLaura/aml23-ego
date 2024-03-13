@@ -39,7 +39,8 @@ class EMG_dataset(Dataset):
         return len(self.df)
     
     def __getitem__(self, idx):
-        emg, label = self.df[idx]['emg_data'],self.df[idx]['label']
+        emg, label = self.df.loc[idx, 'emg_data'],self.df.loc[idx,'description']
+       
         if label== 'Get items from refrigerator/cabinets/drawers' or label== 'Replace items from refrigerator/cabinets/drawers' :
             emg = torch.tensor(emg, dtype=torch.float32)
             label = torch.tensor(0)
