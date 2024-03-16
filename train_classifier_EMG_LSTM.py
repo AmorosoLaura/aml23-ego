@@ -25,6 +25,7 @@ torch.manual_seed(13696641)
 def init_operations():
     """
     parse all the arguments, generate the logger, check gpus to be used and wandb
+    
     """
     logger.info("Running with parameters: " + pformat_dict(args, indent=1))
 
@@ -74,11 +75,11 @@ def main():
         # notice, here it is multiplied by tot_batch/batch_size since gradient accumulation technique is adopted
         training_iterations = args.train.num_iter * (args.total_batch // args.batch_size)
         # all dataloaders are generated here
-        train_loader = torch.utils.data.DataLoader(EMG_dataset('C:/Users/Laura/Desktop/Universita/Polito/Advanced Machine Learning/Progetto/aml23-ego/', 'SXY_train.pkl'), batch_size=args.batch_size, shuffle=True,
+        train_loader = torch.utils.data.DataLoader(EMG_dataset('../drive/MyDrive/EMG_data', 'SXY_train.pkl'), batch_size=args.batch_size, shuffle=True,
                                                    num_workers=args.dataset.workers, pin_memory=True, drop_last=True)
 
 
-        val_loader = torch.utils.data.DataLoader(EMG_dataset('C:/Users/Laura/Desktop/Universita/Polito/Advanced Machine Learning/Progetto/aml23-ego/', 'SXY_test.pkl'), batch_size=args.batch_size, shuffle=False,
+        val_loader = torch.utils.data.DataLoader(EMG_dataset('../drive/MyDrive/EMG_data', 'SXY_test.pkl'), batch_size=args.batch_size, shuffle=False,
                                                  num_workers=args.dataset.workers, pin_memory=True, drop_last=False)        
         train(action_classifier, train_loader, val_loader, device, num_classes)
 
@@ -86,7 +87,7 @@ def main():
         if args.resume_from is not None:
             action_classifier.load_last_model(args.resume_from)
         
-        val_loader = torch.utils.data.DataLoader(EMG_dataset('C:/Users/Laura/Desktop/Universita/Polito/Advanced Machine Learning/Progetto/aml23-ego/', 'SXY_test.pkl'), batch_size=args.batch_size, shuffle=False,
+        val_loader = torch.utils.data.DataLoader(EMG_dataset('../drive/MyDrive/EMG_data', 'SXY_test.pkl'), batch_size=args.batch_size, shuffle=False,
                                                  num_workers=args.dataset.workers, pin_memory=True, drop_last=False)             
         validate(action_classifier, val_loader, device, action_classifier.current_iter, num_classes)
 
@@ -134,7 +135,6 @@ def train(action_classifier, train_loader, val_loader, device, num_classes):
 
         logger.info(f"Iteration {i}/{training_iterations} batch retrieved! Elapsed time = "
                     f"{(end_t - start_t).total_seconds() // 60} m {(end_t - start_t).total_seconds() % 60} s")
-
         ''' Action recognition'''
         source_label = source_label.to(device)
         data = {}
@@ -161,7 +161,7 @@ def train(action_classifier, train_loader, val_loader, device, num_classes):
             logger.info("[%d/%d]\tlast Verb loss: %.4f\tMean verb loss: %.4f\tAcc@1: %.2f%%\tAccMean@1: %.2f%%" %
                         (real_iter, args.train.num_iter, action_classifier.loss.val, action_classifier.loss.avg,
                          action_classifier.accuracy.val[1], action_classifier.accuracy.avg[1]))
-
+            
             action_classifier.check_grad()
             action_classifier.step()
             action_classifier.zero_grad()
