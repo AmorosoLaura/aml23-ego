@@ -11,7 +11,7 @@ save:
     RGB: 25
 
 dataset:
-  annotations_path: train_val
+  annotations_path: action_net_annotations_extraction
   shift: ??
   workers: 4
   stride: 2
