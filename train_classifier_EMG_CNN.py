@@ -23,7 +23,6 @@ modalities = None
 np.random.seed(13696641)
 torch.manual_seed(13696641)
 
-
 class SpectroDataset(Dataset):
     def __init__(self, file_path):
         with open(file_path, 'rb') as f:
@@ -34,14 +33,12 @@ class SpectroDataset(Dataset):
         return len(self.data)
     
     def __getitem__(self, idx):
-        spectrogram = self.data[idx]['spectrogram']
+        spectrogram = torch.tensor(self.data[idx]['spectrogram'])
         label = self.data[idx]['label']
         #print(spectrogram.shape)
         label = torch.tensor(label, dtype=torch.long)
         label = torch.squeeze(label)
-        spectrogram={'EMG': torch.tensor(spectrogram)}
         return spectrogram, label
-
 
 def init_operations():
     """
@@ -95,10 +92,10 @@ def main():
         # notice, here it is multiplied by tot_batch/batch_size since gradient accumulation technique is adopted
         training_iterations = args.train.num_iter * (args.total_batch // args.batch_size)
         # all dataloaders are generated here
-        train_loader = torch.utils.data.DataLoader(SpectroDataset('C:/Users/Laura/Desktop/Universita/Polito/Advanced Machine Learning/Progetto/aml23-ego/EMG_data/emg_spectrogram_train.pkl'), batch_size=args.batch_size, shuffle=True,
+        train_loader = torch.utils.data.DataLoader(SpectroDataset('../drive/MyDrive/EMG_data/emg_spectrogram_train.pkl'), batch_size=args.batch_size, shuffle=True,
                                                    num_workers=args.dataset.workers, pin_memory=True, drop_last=True)
 
-        val_loader = torch.utils.data.DataLoader(SpectroDataset('C:/Users/Laura/Desktop/Universita/Polito/Advanced Machine Learning/Progetto/aml23-ego/EMG_data/emg_spectrogram_test.pkl'), batch_size=args.batch_size, shuffle=False,
+        val_loader = torch.utils.data.DataLoader(SpectroDataset('../drive/MyDrive/EMG_data/emg_spectrogram_test.pkl'), batch_size=args.batch_size, shuffle=False,
                                                  num_workers=args.dataset.workers, pin_memory=True, drop_last=False)        
          
         train(action_classifier, train_loader, val_loader, device, num_classes)
@@ -107,7 +104,7 @@ def main():
         if args.resume_from is not None:
             action_classifier.load_last_model(args.resume_from)
 
-        val_loader = torch.utils.data.DataLoader(SpectroDataset('C:/Users/Laura/Desktop/Universita/Polito/Advanced Machine Learning/Progetto/aml23-ego/EMG_data/emg_spectrogram_test.pkl'), batch_size=args.batch_size, shuffle=False,
+        val_loader = torch.utils.data.DataLoader(SpectroDataset('../drive/MyDrive/EMG_data/emg_spectrogram_test.pkl'), batch_size=args.batch_size, shuffle=False,
                                                  num_workers=args.dataset.workers, pin_memory=True, drop_last=False)        
      
         validate(action_classifier, val_loader, device, action_classifier.current_iter, num_classes)
