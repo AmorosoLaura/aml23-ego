@@ -33,11 +33,12 @@ class SpectroDataset(Dataset):
         return len(self.data)
     
     def __getitem__(self, idx):
-        spectrogram = torch.tensor(self.data[idx]['spectrogram'])
+        spectrogram = self.data[idx]['spectrogram']
         label = self.data[idx]['label']
-        #print(spectrogram.shape)
+        #logger.info(spectrogram.shape)
         label = torch.tensor(label, dtype=torch.long)
         label = torch.squeeze(label)
+        spectrogram = {"EMG": spectrogram} 
         return spectrogram, label
 
 def init_operations():
@@ -109,7 +110,6 @@ def main():
      
         validate(action_classifier, val_loader, device, action_classifier.current_iter, num_classes)
 
-
 def train(action_classifier, train_loader, val_loader, device, num_classes):
     """
     function to train the model on the test set
@@ -160,7 +160,9 @@ def train(action_classifier, train_loader, val_loader, device, num_classes):
 
         if args.aggregation:
             for m in modalities:
+                
                 data[m] = source_data[m].to(device)
+           
             logits, _ = action_classifier.forward(data)
             action_classifier.compute_loss(logits, source_label, loss_weight=1)
             action_classifier.backward(retain_graph=False)
@@ -168,8 +170,10 @@ def train(action_classifier, train_loader, val_loader, device, num_classes):
         else:
             for clip in range(args.train.num_clips):
             # in case of multi-clip training one clip per time is processed
+               
                 for m in modalities:
-                    data[m] = source_data[m][:, clip].to(device)
+                    data[m] = source_data[m][:].to(device)
+                #logger.info("data shape ", data.shape)
                 logits, _ = action_classifier.forward(data)
                 action_classifier.compute_loss(logits, source_label, loss_weight=1)
                 action_classifier.backward(retain_graph=False)
@@ -239,7 +243,7 @@ def validate(model, val_loader, device, it, num_classes):
             else:
                 for i_c in range(args.train.num_clips):
                     for m in modalities:
-                        clip[m] = data[m][:, i_c].to(device)
+                        clip[m] = data[m][:,].to(device)
 
                     output, _ = model(clip)
                     for m in modalities:
