@@ -14,6 +14,8 @@ class LeNet5(nn.Module):
         self.fc2 = nn.Linear(64, num_classes)
 
     def forward(self, x):
+
+        print(x.shape)
         x=x.unsqueeze(dim=1)
         x=x.permute(0,1,3,2)
         x = F.relu(self.conv1(x))
@@ -23,7 +25,7 @@ class LeNet5(nn.Module):
         x = x.view(-1, self.num_flat_features(x))  # Adjusted based on input size
         x = F.relu(self.fc1(x))
         x = self.fc2(x)
-        return x
+        return x,{}
     def num_flat_features(self, x):
         '''
         Get the number of features in a batch of tensors `x`.
