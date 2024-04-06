@@ -19,7 +19,7 @@ dataset:
   num_classes: 8
   RGB:
     data_path: ??
-    tmpl: "img_{:010d}.jpg"
+    tmpl: "img_{:04d}.jpg"
   Event:
     rgb4e: 6
 
