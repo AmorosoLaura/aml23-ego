@@ -1,7 +1,7 @@
 action: save # train or test
 name: saved_feat_I3D
 split: train
-resume_from: ./saved_models/I3D_SourceOnlyD3
+resume_from: ./saved_models/I3D_SourceOnlyD1
 
 save:
   num_clips: 5
@@ -19,7 +19,7 @@ dataset:
   num_classes: 8
   RGB:
     data_path: ??
-    tmpl: "img_{:04d}.jpg"
+    tmpl: "frame_{:010d}.jpg"
   Event:
     rgb4e: 6
 
