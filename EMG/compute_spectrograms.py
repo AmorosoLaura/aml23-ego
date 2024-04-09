@@ -73,28 +73,42 @@ if __name__ == '__main__':
         print(split)
         spectrograms={}
    
-        emg_annotations = pd.read_pickle("C:/Users/Laura/Desktop/Universita/Polito/Advanced Machine Learning/cartella_condivisa_git/aml23-ego/EMG_data/emg_data_preprocessed_"+split+".pkl")
-        for sample in emg_annotations.values():
+        emg_annotations = pd.read_pickle("C:/Users/Laura/Desktop/Universita/Polito/Advanced Machine Learning/Progetto/aml23-ego/emg_preprocessed_"+split+".pkl")
+        
+        print(emg_annotations)
+        for index, sample in emg_annotations.iterrows():
             signal = torch.from_numpy(sample['emg_data']).float()
-            signal=[spectrogram(signal[:, i]) for i in range(16)]
-    
-            #signal=cut_and_pad(signal,160,30)
+            signals=[spectrogram(signal[:, i]) for i in range(16)]
+            print(signals[0].shape)
+            """ #signal=cut_and_pad(signal,160,30)
+            for signal in signals: 
+                label=sample['description']
+                if label== 'Get items from refrigerator/cabinets/drawers' or label== 'Replace items from refrigerator/cabinets/drawers' :
+                    spectrograms[next_key]={'spectrogram': signal, 'label': 0}
             
-            label=sample['label']
+                elif label=='Open a jar of almond butter' or label=='Close a jar of almond butter':
+                    spectrograms[next_key]={'spectrogram': signal, 'label': 9}
+            
+                else:
+                    spectrograms[next_key]={'spectrogram': signal, 'label': activities_to_classify.index(sample['description'])}
+                next_key+=1
+            """
+            label=sample['description']
             if label== 'Get items from refrigerator/cabinets/drawers' or label== 'Replace items from refrigerator/cabinets/drawers' :
-                spectrograms[next_key]={'spectrogram': signal, 'label': 0}
+                spectrograms[next_key]={'spectrogram': signals, 'label': 0}
         
             elif label=='Open a jar of almond butter' or label=='Close a jar of almond butter':
-                spectrograms[next_key]={'spectrogram': signal, 'label': 9}
+                spectrograms[next_key]={'spectrogram': signals, 'label': 9}
         
             else:
-                spectrograms[next_key]={'spectrogram': signal, 'label': activities_to_classify.index(sample['label'])}
+                spectrograms[next_key]={'spectrogram': signals, 'label': activities_to_classify.index(sample['description'])}
             next_key+=1
-            plot_spectrogram(signal)
+            
+            #plot_spectrogram(signal)
         
         labels = [value['label'] for value in spectrograms.values()]
 
-        print(labels)
+     
         
-        with open('C:/Users/Laura/Desktop/Universita/Polito/Advanced Machine Learning/cartella_condivisa_git/aml23-ego/EMG_data/emg_spectrogram_'+split+'.pkl', 'wb') as f_pickle:
+        with open('C:/Users/Laura/Desktop/Universita/Polito/Advanced Machine Learning/Progetto/aml23-ego/EMG_data/emg_spectrogram_'+split+'.pkl', 'wb') as f_pickle:
             pickle.dump(spectrograms, f_pickle)
