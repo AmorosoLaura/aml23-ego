@@ -33,14 +33,17 @@ class SpectroDataset(Dataset):
         return len(self.data)
     
     def __getitem__(self, idx):
-        spectrogram = self.data[idx]['spectrogram']
+        spectrograms = self.data[idx]['spectrogram']
+        #stack the spectrogram so to obtain a single image with 16 channels
+        new_spec = np.stack(spectrograms, axis=-1)
+        
         label = self.data[idx]['label']
-        #logger.info(spectrogram.shape)
         label = torch.tensor(label, dtype=torch.long)
         label = torch.squeeze(label)
-        spectrogram = {"EMG": spectrogram} 
-        return spectrogram, label
 
+
+        spectrogram = {"EMG": new_spec} 
+        return spectrogram, label
 def init_operations():
     """
     parse all the arguments, generate the logger, check gpus to be used and wandb
