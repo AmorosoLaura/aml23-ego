@@ -3,7 +3,7 @@ from torch import nn
 
 class EMG_LSTM(nn.Module):
     
-    def __init__(self):
+    def __init__(self, num_classes=20):
         super().__init__()
        
         
@@ -13,7 +13,7 @@ class EMG_LSTM(nn.Module):
        
         self.dropout = nn.Dropout(p=0.2)
         self.relu = nn.ReLU()
-        self.fc = nn.Linear(in_features=50, out_features=20)
+        self.fc = nn.Linear(in_features=50, out_features=num_classes)
    
     def forward(self, x):
             
