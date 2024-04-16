@@ -131,9 +131,9 @@ def save_feat(model, loader, device, it, num_classes, num_frames):
             #    logger.info("[{}/{}] top1= {:.3f}% top5 = {:.3f}%".format(i_val + 1, len(loader),
             #                                                              model.accuracy.avg[1], model.accuracy.avg[5]))
 
-        os.makedirs("saved_features_action_net", exist_ok=True)
+        os.makedirs("saved_features_an_multimodal", exist_ok=True)
         sampling_modality = "dense" if args.save.dense_sampling['RGB'] else "uniform"
-        pickle.dump(results_dict, open(os.path.join("saved_features_action_net", args.name + "_" +
+        pickle.dump(results_dict, open(os.path.join("saved_features_an_multimodal", args.name + "_" +
                                                     str(num_frames['RGB']) + "_" +
                                                     sampling_modality + "_" +
                                                     args.dataset.shift.split("-")[1] + "_" +

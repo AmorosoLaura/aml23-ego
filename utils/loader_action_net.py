@@ -54,10 +54,11 @@ class ActionNetDataset(data.Dataset, ABC):
                         ["uid", "features_" + m]]
 
                 elif m == 'EMG':
-                    features_type = "spectogram" if spectogram_feat else ""
+                    features_type = "_spectogram" if spectogram_feat else ""
                     model_features = pd.DataFrame(pd.read_pickle(os.path.join(str(self.dataset_conf[m].data_path),
-                                                                              self.dataset_conf[m].features_name + "_" +
-                                                                              features_type + "_" +
+                                                                              self.dataset_conf[m].features_name +
+                                                                              features_type
+                                                                                + "_" +
                                                                               pickle_name))['features'])[
                         ["uid", "features_" + m]]
                 if self.model_features is None:
@@ -73,6 +74,7 @@ class ActionNetDataset(data.Dataset, ABC):
 
         sample = {}
         sample_row = self.model_features[self.model_features["uid"] == int(record.uid)]
+        logger.info(f"SAMPLE ROW: {sample_row}")
         assert len(sample_row) == 1
         for m in self.modalities:
             sample[m] = sample_row["features_" + m].values[0]

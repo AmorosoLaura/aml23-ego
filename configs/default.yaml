@@ -44,7 +44,7 @@ dataset:
 # these are the action recognition models for each modality
 models:
   RGB:
-    model: ???
+    model: TRN_classifier
     normalize: False
     kwargs: {}
     lr_steps: 3000
