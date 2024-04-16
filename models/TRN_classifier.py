@@ -5,7 +5,7 @@ import numpy as np
 
 class TRN_classifier(torch.nn.Module):
     # relation module in multi-scale with a classifier at the end
-    def __init__(self, img_feature_dim=1024, num_frames=5, num_class=20, dropout=0.6):
+    def __init__(self, img_feature_dim=1024, num_frames=5, num_classes=20, dropout=0.6):
         super(TRN_classifier, self).__init__()
         self.subsample_num = 3 # how many relations selected to sum up
         self.img_feature_dim = img_feature_dim
@@ -18,7 +18,7 @@ class TRN_classifier(torch.nn.Module):
             self.relations_scales.append(relations_scale)
             self.subsample_scales.append(min(self.subsample_num, len(relations_scale))) # how many samples of relation to select in each forward pass
 
-        self.num_class = num_class
+        self.num_class = num_classes
         self.num_frames = num_frames
         num_bottleneck = 256
         self.fc_fusion_scales = nn.ModuleList() # high-tech modulelist
