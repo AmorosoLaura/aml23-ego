@@ -61,7 +61,7 @@ class EpicKitchensDataset(data.Dataset, ABC):
             for m in self.modalities:
                 # load features for each modality
                 sampling_mode = "dense" if self.dense_sampling['RGB'] else "uniform"
-                model_features = pd.DataFrame(pd.read_pickle(os.path.join("saved_features_action_net",
+                model_features = pd.DataFrame(pd.read_pickle(os.path.join(str(self.dataset_conf[m].data_path),
                                                                           self.dataset_conf[m].features_name + "_" +
                                                                           str(self.num_frames_per_clip[m]) + "_" +
                                                                           sampling_mode + "_" +

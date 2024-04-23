@@ -19,7 +19,6 @@ class EMG_LSTM(nn.Module):
             
         x = x.float()
         x=x.squeeze(dim=1)
-        print(x.shape)
         out, _ = self.lstm(x)
         #out2, _ = self.lstm2(out1)
        

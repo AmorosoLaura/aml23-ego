@@ -35,7 +35,7 @@ dataset:
   resolution: 224 # input resolution to the model
   num_classes: 20
   RGB:
-    data_path: saved_features_an_multimodal # folder to pkl data
+    data_path: saved_features_action_net # folder to pkl data
     tmpl: "img_{:010d}.jpg" # format of RGB filenames
     features_name: features_rgb # name of the pkl file
   Event: # not neeeded for the project

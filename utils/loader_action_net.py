@@ -74,7 +74,6 @@ class ActionNetDataset(data.Dataset, ABC):
 
         sample = {}
         sample_row = self.model_features[self.model_features["uid"] == int(record.uid)]
-        logger.info(f"SAMPLE ROW: {sample_row}")
         assert len(sample_row) == 1
         for m in self.modalities:
             sample[m] = sample_row["features_" + m].values[0]
