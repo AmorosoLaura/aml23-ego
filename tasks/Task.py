@@ -166,27 +166,39 @@ class Task(torch.nn.Module, metaclass=ABCMeta):
         path : str
             directory to load models from
         """
-        # List all the files in the path in chronological order (1st is most recent, last is less recent)
-        last_models_dir = list(
-            sorted(
-                Path(path).iterdir(),
-                key=lambda date: datetime.strptime(os.path.basename(os.path.normpath(date)), "%b%d_%H-%M-%S"),
-            )
-        )[-1]
-        saved_models = [x for x in reversed(sorted(Path(last_models_dir).iterdir(), key=os.path.getmtime))]
+
 
         for m in self.modalities:
-            # Get the correct model (modality, name, idx)
-            model = list(
-                filter(
-                    lambda x: m == x.name.split(".")[0].split("_")[-2]
-                    and self.name == x.name.split(".")[0].split("_")[-3],
-                    saved_models,
-                )
-            )[0].name
+            p=path[m]
 
-            model_path = os.path.join(last_models_dir, model)
-            self.__restore_checkpoint(m, model_path)
+            #List all the files in the path in chronological order (1st is most recent, last is less recent)
+            last_models_dir = list(
+                sorted(
+                    Path(p).iterdir(),
+                    key=lambda date: datetime.strptime(os.path.basename(os.path.normpath(date)), "%b%d_%H-%M-%S"),
+                )
+            )[-1]
+            saved_models = [x for x in reversed(sorted(Path(last_models_dir).iterdir(), key=os.path.getmtime))]
+
+            for m in self.modalities:
+                # Get the correct model (modality, name, idx)
+                model_list = list(
+                    filter(
+                        lambda x: m == x.name.split(".")[0].split("_")[-2]
+                        and self.name == x.name.split(".")[0].split("_")[-3],
+                        saved_models,
+                    )
+                )
+                if model_list!=[]:
+                    model=model_list[0].name
+
+                    model_path = os.path.join(last_models_dir, model)
+                    self.__restore_checkpoint(m, model_path)
+
+    def load_last_model_an(self, path: str):
+
+        for m in self.modalities:
+            self.__restore_checkpoint(m, path)
 
     def save_model(self, current_iter: int, last_iter_acc: float, prefix: Optional[str] = None):
         """Save the model.
