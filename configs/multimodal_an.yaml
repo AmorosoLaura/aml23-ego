@@ -10,8 +10,8 @@ models_dir: models # directory containing all the models
 aggregation: True
 
 resume_from:  # checkpoint directory
-  RGB: null
-  EMG: null
+  RGB: saved_models/ActionNet/RGB_model/TRN_dense_25/model_1/action-classifier_RGB_9.pth
+  EMG: saved_models/ActionNet/EMG_model/LSTM/model_1/action-classifier_EMG_9.pth
 
 train:
   num_iter: 5000 # number of training iterations with total_batch size
