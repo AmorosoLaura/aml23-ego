@@ -130,7 +130,7 @@ def save_feat(model, loader, device, it, num_classes, num_frames):
             #    logger.info("[{}/{}] top1= {:.3f}% top5 = {:.3f}%".format(i_val + 1, len(loader),
             #                                                              model.accuracy.avg[1], model.accuracy.avg[5]))
 
-        for path in args.feature_path:
+        for path in args.features_path:
             os.makedirs(path, exist_ok=True)
             sampling_modality = "dense" if args.save.dense_sampling['RGB'] else "uniform"
             pickle.dump(results_dict, open(os.path.join(path, args.name + "_" +

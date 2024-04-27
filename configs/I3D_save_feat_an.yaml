@@ -2,12 +2,12 @@ action: save # train or test
 name: features_rgb
 split: train
 resume_from: ./saved_models/I3D_SourceOnlyD1
-features_path: [saved_features_an_multimodal, saved_features_action_net]
+features_path: [saved_features_action_net]
 
 save:
   num_clips: 5
   dense_sampling:
-    RGB: True
+    RGB: ??
   num_frames_per_clip:
     RGB: ??
 
