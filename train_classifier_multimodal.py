@@ -68,7 +68,7 @@ def main():
         # resume_from argument is adopted in case of restoring from a checkpoint
         for m in modalities:
             if args.resume_from[m] is not None:
-                action_classifier.load_last_model_an(args.resume_from[m])
+                action_classifier.load_last_model_an(args.resume_from[m], m)
         # define number of iterations I'll do with the actual batch: we do not reason with epochs but with iterations
         # i.e. number of batches passed
         # notice, here it is multiplied by tot_batch/batch_size since gradient accumulation technique is adopted
@@ -93,7 +93,7 @@ def main():
 
     elif args.action == "validate":
         if args.resume_from is not None:
-            action_classifier.load_last_model_an(args.resume_from)
+            action_classifier.load_last_model_an(args.resume_from[m], m)
         val_loader = torch.utils.data.DataLoader(ActionNetDataset(args.dataset.shift.split("-")[-1], modalities,
                                                                      'val', args.dataset,
                                                                      args.train.num_frames_per_clip,
