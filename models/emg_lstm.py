@@ -1,4 +1,6 @@
 from torch import nn
+from utils.logger import logger
+
 
 
 class EMG_LSTM(nn.Module):
@@ -20,12 +22,14 @@ class EMG_LSTM(nn.Module):
         x = x.float()
         x=x.squeeze(dim=1)
         out, _ = self.lstm(x)
+        mid_level_features = {}
+        mid_level_features['features'] = out
+
         #out2, _ = self.lstm2(out1)
        
         #out_last = out1[-1]
-      
         out = self.dropout(out)
         out= self.relu(out)
 
         out = self.fc(out[:, -1,:])
-        return out, {}
+        return out, mid_level_features

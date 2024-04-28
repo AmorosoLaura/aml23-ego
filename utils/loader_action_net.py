@@ -78,7 +78,7 @@ class ActionNetDataset(data.Dataset, ABC):
         for m in self.modalities:
             sample[m] = sample_row["features_" + m].values[0]
         if self.additional_info:
-            return sample, record.label, record.untrimmed_video_name, record.uid
+            return sample, record.label, record.uid
         else:
             return sample, record.label
 

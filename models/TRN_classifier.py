@@ -2,6 +2,7 @@ import torch
 import torch.nn as nn
 from torch.autograd import Variable
 import numpy as np
+from utils.logger import logger
 
 class TRN_classifier(torch.nn.Module):
     # relation module in multi-scale with a classifier at the end
@@ -48,6 +49,7 @@ class TRN_classifier(torch.nn.Module):
         act_all = act_all.view(act_all.size(0), self.scales[0] * self.img_feature_dim)
         act_all = self.fc_fusion_scales[0](act_all)
         act_all = self.classifier_scales[0](act_all)
+        features = act_all.clone()  # Save the features before classification
 
         for scaleID in range(1, len(self.scales)):
             # iterate over the scales
@@ -56,9 +58,10 @@ class TRN_classifier(torch.nn.Module):
                 act_relation = x[:, self.relations_scales[scaleID][idx], :]
                 act_relation = act_relation.view(act_relation.size(0), self.scales[scaleID] * self.img_feature_dim)
                 act_relation = self.fc_fusion_scales[scaleID](act_relation)
+                features = act_relation.clone()
                 act_relation = self.classifier_scales[scaleID](act_relation)
                 act_all += act_relation
-        return act_all, {'features': x}
+        return act_all, {'features': features}
 
     def return_relationset(self, num_frames, num_frames_relation):
         import itertools
