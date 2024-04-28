@@ -56,11 +56,9 @@ def main():
         action_classifier.load_last_model_an(args.resume_from[m], m)
 
     if args.action == "save":
-        augmentations = {"train": train_augmentations, "test": test_augmentations}
-        # the only action possible with this script is "save"
 
         loader = torch.utils.data.DataLoader(ActionNetDataset(args.dataset.shift.split("-")[1], modalities,
-                                                                 "train", args.dataset,
+                                                                 args.split, args.dataset,
                                                                  args.save.num_frames_per_clip,
                                                                  args.save.num_clips, args.save.dense_sampling,
                                                                  False,  load_feat=True,
@@ -114,6 +112,7 @@ def save_feat(model, loader, device, it, num_classes, num_frames):
 
             output, feat = model(clip)
             feat = feat["features"]
+            logger.info(f"FEAT: {feat['RGB']}")
             for m in modalities:
                 logits[m] = output[m]
                 features[m] = feat[m]
@@ -122,7 +121,7 @@ def save_feat(model, loader, device, it, num_classes, num_frames):
             for i in range(batch):
                 sample = {"uid": int(uid[i].cpu().detach().numpy())}
                 for m in modalities:
-                    sample["features_" + m] = features[m][:, i].cpu().detach().numpy()
+                    sample["features_" + m] = features[m].cpu().detach().numpy()
                 results_dict["features"].append(sample)
             num_samples += batch
 
