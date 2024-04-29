@@ -22,7 +22,6 @@ class FullyConnectedFusion(nn.Module):
         feature_emg = self.fc1(feature_emg)
 
         concatenated_feat = torch.cat((feature_emg, feature_rgb.squeeze(dim=1)), dim=1)
-        logger.info(f"FEATURE: {concatenated_feat.shape}")
         concatenated_feat = self.dropout(concatenated_feat)
         concatenated_feat = self.fc2(concatenated_feat)
         results = self.fc3(concatenated_feat)
