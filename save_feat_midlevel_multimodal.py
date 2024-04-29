@@ -112,7 +112,6 @@ def save_feat(model, loader, device, it, num_classes, num_frames):
 
             output, feat = model(clip)
             feat = feat["features"]
-            logger.info(f"FEAT: {feat['RGB']}")
             for m in modalities:
                 logits[m] = output[m]
                 features[m] = feat[m]

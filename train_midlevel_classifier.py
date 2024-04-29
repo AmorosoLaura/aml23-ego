@@ -194,7 +194,9 @@ def validate(model, val_loader, device, it, num_classes):
 
             clip = {}
             for m in modalities:
-                clip[m] = data[m].to(device)
+                clip[m] = data[m]
+                for i in range(2):
+                    clip[m][i] = data[m][i].to(device)
             output, _ = model(clip)
             for m in modalities:
                 logits[m] = output[m]

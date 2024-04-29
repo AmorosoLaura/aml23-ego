@@ -8,10 +8,10 @@ class FullyConnectedFusion(nn.Module):
         super().__init__()
 
         self.flatten = nn.Flatten()
-        self.fc1 = nn.Linear(5000, 256)
+        self.fc1 = nn.Linear(5000, 512)
         self.dropout = nn.Dropout(dropout_prob)
         self.relu = nn.ReLU()
-        self.fc2 = nn.Linear(512, 256)
+        self.fc2 = nn.Linear(1024, 256)
         self.fc3 = nn.Linear(256, num_classes)
         self.avg_pool = nn.AdaptiveAvgPool1d(1)  # AdaptiveAvgPool1d for averaging along the sequence dimension
 

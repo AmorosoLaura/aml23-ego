@@ -16,7 +16,7 @@ class Lstm_classifier(nn.Module):
 
         out, _ = self.lstm(x)
         mid_level_features = {}
-        mid_level_features['features'] = out
+        mid_level_features['features'] = out[:, -1, :]
         out = self.dropout(out)
         out = self.relu(out)
 

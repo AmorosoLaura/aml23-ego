@@ -92,8 +92,9 @@ def main():
         train(action_classifier, train_loader, val_loader, device, num_classes)
 
     elif args.action == "validate":
-        if args.resume_from is not None:
-            action_classifier.load_last_model_an(args.resume_from[m], m)
+        for m in modalities:
+            if args.resume_from[m] is not None:
+                action_classifier.load_last_model_an(args.resume_from[m], m)
         val_loader = torch.utils.data.DataLoader(ActionNetDataset(args.dataset.shift.split("-")[-1], modalities,
                                                                      'val', args.dataset,
                                                                      args.train.num_frames_per_clip,
