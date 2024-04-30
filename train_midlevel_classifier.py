@@ -83,13 +83,13 @@ def main():
                                                    num_workers=args.dataset.workers, pin_memory=True, drop_last=True)
 
         val_loader = torch.utils.data.DataLoader(MidLevelLDataset(args.dataset.shift.split("-")[-1], modalities,
-                                                                     'train', args.dataset,
+                                                                     'val', args.dataset,
                                                                      args.train.num_frames_per_clip,
                                                                      args.train.num_clips, args.train.dense_sampling,
                                                                      None, load_feat=True),
                                                  batch_size=args.batch_size, shuffle=False,
                                                  num_workers=args.dataset.workers, pin_memory=True, drop_last=False)
-        train(action_classifier, train_loader, train_loader, device, num_classes)
+        train(action_classifier, train_loader, val_loader, device, num_classes)
 
     elif args.action == "validate":
         if args.resume_from is not None:
@@ -189,7 +189,7 @@ def validate(model, val_loader, device, it, num_classes):
             label = label.to(device)
 
             for m in modalities:
-                batch = data[m].shape[0]
+                batch = data[m][0].shape[0]
                 logits[m] = torch.zeros((args.test.num_clips, batch, num_classes)).to(device)
 
             clip = {}
