@@ -1,6 +1,6 @@
 action: save # train or test
-name: saved_feat_I3D
-split: train
+name: saved_features
+split: ??
 resume_from: ./saved_models/I3D_SourceOnlyD3
 features_path: saved_features
 

@@ -13,7 +13,7 @@ split: train
 
 
 resume_from:  # checkpoint directory
-  RGB: saved_models/ActionNet/RGB_model/TRN_dense_25/model_1/action-classifier_RGB_9.pth
+  RGB: saved_models/ActionNet/RGB_model/LSTM_dense_25/model_1/action-classifier_RGB_9.pth
   EMG: saved_models/ActionNet/EMG_model/LSTM/model_1/action-classifier_EMG_9.pth
 
 save:
@@ -21,6 +21,7 @@ save:
   lr_steps: 3000 # steps before reducing learning rate
   eval_freq: 50 # evaluation frequency
   num_clips: 5 # clips adopted in training
+  spectogram_feat: ??
   dense_sampling: # sampling version adopted in training for each modality
     RGB: True
   num_frames_per_clip: # number of frames adopted in training for each modality

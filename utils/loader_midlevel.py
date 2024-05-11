@@ -51,8 +51,6 @@ class MidLevelLDataset(data.Dataset, ABC):
                                                                           pickle_name))['features'])[
                     ["uid", "features_RGB", "features_EMG"]]
 
-
-
             self.model_features = pd.merge(self.model_features, self.list_file, how="inner", on="uid")
 
     def __getitem__(self, index):

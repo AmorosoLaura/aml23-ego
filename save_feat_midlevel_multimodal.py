@@ -95,7 +95,6 @@ def save_feat(model, loader, device, it, num_classes, num_frames):
 
             for m in modalities:
 
-                logger.info(f"Data shape: {data[m].shape}")
                 batch, height, width = data[m].shape
 
                 # data[m] = data[m].reshape(batch, args.save.num_clips,

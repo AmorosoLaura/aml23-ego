@@ -78,7 +78,7 @@ def main():
                                                                        'train', args.dataset,
                                                                        args.train.num_frames_per_clip,
                                                                        args.train.num_clips, args.train.dense_sampling,
-                                                                       None, load_feat=True),
+                                                                       args.train.spectogram_feat, load_feat=True),
                                                    batch_size=args.batch_size, shuffle=True,
                                                    num_workers=args.dataset.workers, pin_memory=True, drop_last=True)
 
@@ -86,7 +86,7 @@ def main():
                                                                      'val', args.dataset,
                                                                      args.train.num_frames_per_clip,
                                                                      args.train.num_clips, args.train.dense_sampling,
-                                                                     None, load_feat=True),
+                                                                     args.train.spectogram_feat, load_feat=True),
                                                  batch_size=args.batch_size, shuffle=False,
                                                  num_workers=args.dataset.workers, pin_memory=True, drop_last=False)
         train(action_classifier, train_loader, val_loader, device, num_classes)
@@ -99,7 +99,7 @@ def main():
                                                                      'val', args.dataset,
                                                                      args.train.num_frames_per_clip,
                                                                      args.train.num_clips, args.train.dense_sampling,
-                                                                     None, load_feat=True),
+                                                                     args.train.spectogram_feat, load_feat=True),
                                                  batch_size=args.batch_size, shuffle=False,
                                                  num_workers=args.dataset.workers, pin_memory=True, drop_last=False)
 
