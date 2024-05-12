@@ -13,7 +13,7 @@ def get_domains_and_labels(args):
 
 def get_domains_and_labels_action_net(args):
     num_verbs = 20
-    domains = {'D1': 8, 'D2': 1, 'D3': 22, 'S04': 20}
+    domains = {'D1': 8, 'D2': 1, 'D3': 22, 'S04': 20, 'allData': 20}
     source_domain = domains[args.dataset.shift.split("-")[0]]
     target_domain = domains[args.dataset.shift.split("-")[1]]
     valid_labels = [i for i in range(num_verbs)]
