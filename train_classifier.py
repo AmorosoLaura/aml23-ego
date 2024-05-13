@@ -56,7 +56,10 @@ def main():
         logger.info('{} Net\tModality: {}'.format(args.models[m].model, m))
         # notice that here, the first parameter passed is the input dimension
         # In our case it represents the feature dimensionality which is equivalent to 1024 for I3D
-        models[m] = getattr(model_list, args.models[m].model)()
+        logger.info(f"Paramter of models: drop: {args.models[m].dropout}, subsample: {args.models[m].subsample_num}, num layers: {args.models[m].num_layers}")
+        models[m] = getattr(model_list, args.models[m].model)(dropout_prob=args.models[m].dropout,
+                                                              subsample_num=args.models[m].subsample_num,
+                                                              num_layers=args.models[m].num_layers)
 
     # the models are wrapped into the ActionRecognition task which manages all the training steps
     action_classifier = tasks.ActionRecognition("action-classifier", models, args.batch_size,

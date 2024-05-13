@@ -33,7 +33,7 @@ dataset:
   workers: 4 # number of workers for the dataloader
   stride: 2 # stride in case of dense sampling
   resolution: 224 # input resolution to the model
-  num_classes: 20
+  num_classes: 8
   RGB:
     data_path: saved_features # folder to pkl data
     tmpl: "img_{:010d}.jpg" # format of RGB filenames

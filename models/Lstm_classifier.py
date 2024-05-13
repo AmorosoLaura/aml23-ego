@@ -4,10 +4,10 @@ from utils.logger import logger
 
 
 class Lstm_classifier(nn.Module):
-    def __init__(self, num_classes=20, input_size=1024, hidden_size=512, dropout_prob=0.5):
+    def __init__(self, num_classes=20, input_size=1024, hidden_size=512, dropout_prob=0.5, num_layers=1, subsample_num=None):
         super().__init__()
 
-        self.lstm = nn.LSTM(input_size, hidden_size=hidden_size, num_layers=1, batch_first=True)
+        self.lstm = nn.LSTM(input_size, hidden_size=hidden_size, num_layers=num_layers, batch_first=True)
         self.dropout = nn.Dropout(dropout_prob)
         self.relu = nn.ReLU()
         self.fc = nn.Linear(hidden_size, num_classes)

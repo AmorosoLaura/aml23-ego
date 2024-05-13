@@ -37,6 +37,9 @@ def init_operations():
         wandb.init(group=args.wandb_name, dir=args.wandb_dir)
         wandb.run.name = args.name + "_" + args.shift.split("-")[0] + "_" + args.shift.split("-")[-1]
 
+    if  args.models['RGB'].model == 'MLP_classifier':
+        args.aggregation = False
+
 
 def main():
     global training_iterations, modalities

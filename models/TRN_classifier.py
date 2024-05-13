@@ -6,9 +6,9 @@ from utils.logger import logger
 
 class TRN_classifier(torch.nn.Module):
     # relation module in multi-scale with a classifier at the end
-    def __init__(self, img_feature_dim=1024, num_frames=5, num_classes=20, dropout=0.6):
+    def __init__(self, img_feature_dim=1024, num_frames=5, num_classes=20, dropout_prob=0.6, subsample_num=3, num_layers=None):
         super(TRN_classifier, self).__init__()
-        self.subsample_num = 3 # how many relations selected to sum up
+        self.subsample_num = subsample_num # how many relations selected to sum up
         self.img_feature_dim = img_feature_dim
         self.scales = [i for i in range(num_frames, 1, -1)] #
 
@@ -31,10 +31,10 @@ class TRN_classifier(torch.nn.Module):
                         nn.ReLU(),
                         nn.Linear(scale * self.img_feature_dim, num_bottleneck),
                         nn.ReLU(),
-                        nn.Dropout(p=dropout),# this is the newly added thing
+                        nn.Dropout(p=dropout_prob),# this is the newly added thing
                         nn.Linear(num_bottleneck, num_bottleneck),
                         nn.ReLU(),
-                        nn.Dropout(p=dropout),
+                        nn.Dropout(p=dropout_prob),
                         )
             classifier = nn.Linear(num_bottleneck, self.num_class)
             self.fc_fusion_scales += [fc_fusion]

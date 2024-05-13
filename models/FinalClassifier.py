@@ -2,7 +2,7 @@ from torch import nn
 
 
 class MLP_classifier(nn.Module):
-    def __init__(self, num_classes=8, input_size=1024, hidden_size=512, dropout_prob=0.5):
+    def __init__(self, num_classes=8, input_size=1024, hidden_size=512, dropout_prob=0.5, num_layers=None, subsample_num=None):
         super().__init__()
 
         self.fc1 = nn.Linear(input_size, hidden_size)

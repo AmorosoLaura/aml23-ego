@@ -46,6 +46,9 @@ models:
   RGB:
     model: ???
     normalize: False
+    dropout: ??
+    subsample_num: ??
+    num_layers: ??
     kwargs: {}
     lr_steps: 3000
     lr: 0.01
