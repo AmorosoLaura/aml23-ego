@@ -25,7 +25,7 @@ class ActionNetDataset(data.Dataset, ABC):
         self.num_clips = num_clips
         self.stride = self.dataset_conf.stride
         self.additional_info = additional_info
-
+        self.is_spectrogram= spectogram_feat
         if self.mode == "train":
             pickle_name = split + "_train.pkl"
         elif kwargs.get('save', None) is not None:
@@ -54,13 +54,14 @@ class ActionNetDataset(data.Dataset, ABC):
                         ["uid", "features_" + m]]
 
                 elif m == 'EMG':
-                    features_type = "_spectogram" if spectogram_feat else ""
+                    features_type = "_spectrogram" if spectogram_feat else ""
+                    print(features_type)
                     model_features = pd.DataFrame(pd.read_pickle(os.path.join(str(self.dataset_conf[m].data_path),
                                                                               self.dataset_conf[m].features_name +
                                                                               features_type
                                                                                 + "_" +
                                                                               pickle_name))['features'])[
-                        ["uid", "features_" + m]]
+                        ["uid", "features_" + m + features_type]]
                 if self.model_features is None:
                     self.model_features = model_features
                 else:
@@ -76,7 +77,14 @@ class ActionNetDataset(data.Dataset, ABC):
         sample_row = self.model_features[self.model_features["uid"] == int(record.uid)]
         assert len(sample_row) == 1
         for m in self.modalities:
-            sample[m] = sample_row["features_" + m].values[0]
+            if m=='EMG':
+              features_type = "_spectrogram" if self.is_spectrogram else ""
+              sample[m] = sample_row["features_" + m + features_type].values[0]
+              if self.is_spectrogram:
+                sample[m]=np.stack(sample[m], axis=-1)
+            else:
+              sample[m]= sample_row["features_" + m ].values[0]
+            
         if self.additional_info:
             return sample, record.label, record.uid
         else:
