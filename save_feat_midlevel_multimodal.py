@@ -61,7 +61,7 @@ def main():
                                                                  args.split, args.dataset,
                                                                  args.save.num_frames_per_clip,
                                                                  args.save.num_clips, args.save.dense_sampling,
-                                                                 False,  load_feat=True,
+                                                                 args.save.spectrogram_feat,  load_feat=True,
                                                                     additional_info=True,
                                                                  **{"save": args.split}),
                                              batch_size=1, shuffle=False,
