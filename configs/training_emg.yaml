@@ -32,7 +32,7 @@ test:
 
 dataset:
   annotations_path: an_multimodal_annotations # path for the annotations data
-  shift: S04-S04 # shifts of the dataset
+  shift: allData-allData # shifts of the dataset
   workers: 4 # number of workers for the dataloader
   stride: 2 # stride in case of dense sampling
   resolution: 224 # input resolution to the model
