@@ -270,7 +270,7 @@ def validate(model, val_loader, device, it, num_classes):
 
     if it % 5000 == 0:
         with open('/content/drive/My Drive/your_file.txt', 'w') as f:
-            f.write(f'\nmodel: {args.models.RGB.model}, dense: {args.train.dense_sampling.RGB}, frames: {args.train.num_frames_per_clip.RGB}, top1: {model.accuracy.avg[1]}')
+            f.write(f'\nmodel: {args.models.RGB.model}, frames: {args.train.num_frames_per_clip.RGB}, subsample_num: {args.models.RGB.subsample_num}: top1: {model.accuracy.avg[1]}')
 
     with open(os.path.join(args.log_dir, f'val_precision_{args.dataset.shift.split("-")[0]}-'
                                          f'{args.dataset.shift.split("-")[-1]}.txt'), 'a+') as f:
