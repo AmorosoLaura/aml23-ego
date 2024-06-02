@@ -276,10 +276,7 @@ if __name__=='__main__':
    
     train_final_df = pd.DataFrame(train_data)
     test_final_df = pd.DataFrame(test_data)
-    """
-    train_final_df['uid'] = range(len(train_final_df))
-    test_final_df['uid'] = range(len(test_final_df))
-    """         
+   
     train_final_df['uid']=train_final_df.index
     test_final_df['uid']=test_final_df.index 
     
@@ -291,12 +288,6 @@ if __name__=='__main__':
     train_final_df['description'] = train_final_df['description'].map(lambda x: activities_renamed[x] if x in activities_renamed else x)
     test_final_df['description'] = test_final_df['description'].map(lambda x: activities_renamed[x] if x in activities_renamed else x)
     
-    """
-    unique_values = train_final_df['description'].unique()
-    value_to_int = {value: idx for idx, value in enumerate(unique_values)}
-    train_final_df['description_class'] = train_final_df['description'].map(value_to_int)
-    test_final_df['description_class'] = test_final_df['description'].map(value_to_int)
-    """ 
     train_final_df['description_class'] = train_final_df['description'].map(activities_to_classify).astype(int)
     test_final_df['description_class'] = test_final_df['description'].map(activities_to_classify).astype(int) 
    
