@@ -48,9 +48,10 @@ class TRN_classifier(torch.nn.Module):
         act_all = x[:, self.relations_scales[0][0] , :]
         act_all = act_all.view(act_all.size(0), self.scales[0] * self.img_feature_dim)
         act_all = self.fc_fusion_scales[0](act_all)
-        act_all = self.classifier_scales[0](act_all)
         features = act_all.clone()  # Save the features before classification
 
+        act_all = self.classifier_scales[0](act_all)
+       
         for scaleID in range(1, len(self.scales)):
             # iterate over the scales
             idx_relations_randomsample = np.random.choice(len(self.relations_scales[scaleID]), self.subsample_scales[scaleID], replace=False)
@@ -58,7 +59,7 @@ class TRN_classifier(torch.nn.Module):
                 act_relation = x[:, self.relations_scales[scaleID][idx], :]
                 act_relation = act_relation.view(act_relation.size(0), self.scales[scaleID] * self.img_feature_dim)
                 act_relation = self.fc_fusion_scales[scaleID](act_relation)
-                features = act_relation.clone()
+                features += act_relation
                 act_relation = self.classifier_scales[scaleID](act_relation)
                 act_all += act_relation
         return act_all, {'features': features}
