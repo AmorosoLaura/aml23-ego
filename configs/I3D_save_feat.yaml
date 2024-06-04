@@ -1,7 +1,7 @@
 action: save # train or test
 name: saved_features
 split: ??
-resume_from: ./saved_models/I3D_SourceOnlyD3
+resume_from: ./saved_models/I3D_SourceOnlyD1
 features_path: saved_features
 
 save:
