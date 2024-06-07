@@ -1,6 +1,6 @@
 action: save # train or test
 name: features_rgb
-split: train
+split: train #or test
 resume_from: ./saved_models/I3D_SourceOnlyD1
 features_path: [saved_features_an_rgb]
 
