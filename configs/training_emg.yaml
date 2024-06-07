@@ -31,14 +31,14 @@ test:
     RGB: 5
 
 dataset:
-  annotations_path: an_multimodal_annotations # path for the annotations data
+  annotations_path: an_annotations/an_annotations_5s # path for the annotations data
   shift: allData-allData # shifts of the dataset
   workers: 4 # number of workers for the dataloader
   stride: 2 # stride in case of dense sampling
   resolution: 224 # input resolution to the model
   num_classes: 20
   EMG:
-    data_path: saved_features_an_multimodal # folder to pkl data
+    data_path: saved_features_an/saved_features_an_emg_5s # folder to pkl data
     features_name: features_emg # name of the pkl file
   Event: # not neeeded for the project
     rgb4e: 6
@@ -50,6 +50,6 @@ models:
     normalize: False
     kwargs: { }
     lr_steps: 3000
-    lr: 0.05
+    lr: 0.2
     sgd_momentum: 0.9
-    weight_decay: 1e-4
+    weight_decay: 1e-7
