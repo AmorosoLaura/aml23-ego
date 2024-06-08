@@ -10,6 +10,7 @@ class LeNet5(nn.Module):
         super(LeNet5, self).__init__()
         self.conv1 = nn.Conv2d(in_channels=16, out_channels=6, kernel_size=3, padding=1)
         self.conv2 = nn.Conv2d(in_channels=6, out_channels=16, kernel_size=3, padding=1)
+        #384 if spectrograms of 10s otherwise if 5s 192
         self.fc1 = nn.Linear(384, 64)  # Adjusted based on input size
         self.fc2 = nn.Linear(64, num_classes)
 
