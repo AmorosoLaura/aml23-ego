@@ -15,7 +15,7 @@ train:
   num_iter: 500 # number of training iterations with total_batch size
   lr_steps: 300 # steps before reducing learning rate
   eval_freq: 50 # evaluation frequency
-  num_clips: 5 # clips adopted in training
+  num_clips: 1 # clips adopted in training
   spectogram_feat: ??
   dense_sampling: # sampling version adopted in training for each modality
     RGB: True
@@ -23,14 +23,14 @@ train:
     RGB: 5
 
 test:
-  num_clips: 5 # number of clips in testing
+  num_clips: 1 # number of clips in testing
   dense_sampling: # sampling version adopted in test for each modality
     RGB: True
   num_frames_per_clip: # number of frames adopted in test for each modality
     RGB: 5
 
 dataset:
-  annotations_path: an_multimodal_annotations # path for the annotations data
+  annotations_path: an_annotations/an_annotations_multimodal_5s # path for the annotations data
   shift: S04-S04 # shifts of the dataset
   workers: 4 # number of workers for the dataloader
   stride: 2 # stride in case of dense sampling
