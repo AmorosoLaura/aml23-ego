@@ -84,6 +84,7 @@ class EpicKitchensDataset(data.Dataset, ABC):
         ##################################################################
         if self.dense_sampling[modality]:
 
+            # generates the evenely space central frames
             center_frames = np.linspace(0, record.num_frames[modality], self.num_clips + 2,
                                         dtype=np.int32)[1:-1]
 
@@ -93,21 +94,33 @@ class EpicKitchensDataset(data.Dataset, ABC):
                 end = center + math.ceil(self.num_frames_per_clip[modality] / 2 * self.stride)
                 indices.extend(np.arange(start, end, self.stride))
 
-            offset = -indices[0] if indices[0] < 0 else 0
+            # offset = -indices[0] if indices[0] < 0 else 0
             for i in range(0, len(indices), self.num_frames_per_clip[modality]):
-                indices_old = indices[i]
                 for j in range(self.num_frames_per_clip[modality]):
-                    indices[i + j] = indices[i + j] + offset if indices_old < 0 else indices[i + j]
-                    indices[i + j] = record.num_frames[modality] if indices[i+j] > record.num_frames[modality] else indices[i+j]
+                    # indices[i + j] = indices[i + j] + offset if indices[i]< 0 else indices[i + j]
+                    # if the index is gretater than the last frame repeat the last frame record.num_frames[modality]
+                    indices[i + j] = record.num_frames[modality] if indices[i + j] > record.num_frames[modality] else \
+                    indices[i + j]
 
         else:
+            # number of frames between each sampling index
             average_duration = record.num_frames[modality] // self.num_frames_per_clip[modality]
-            if average_duration > 0:
-                frame_idx = np.multiply(np.arange(self.num_frames_per_clip[modality]), average_duration) + \
-                            np.random.randint(average_duration, size=self.num_frames_per_clip[modality])
-                indices = np.tile(frame_idx, self.num_clips)
-            else:
+
+            if average_duration <= 0:
                 indices = np.zeros((self.num_frames_per_clip[modality] * self.num_clips,))
+            else:
+                # if num_frames_per_clip is 5 this produced [0,1,2,3,4]
+                range_numbers = np.arange(self.num_frames_per_clip[modality])
+                # if average_duration is 10 this produces[0,10,20,30,40]
+                intervals_idx = np.multiply(range_numbers, average_duration)
+                # for each interval select a random frame index, for example [3, 7, 1, 8, 4]
+                # i.e 3rd frame from [0,10], 7th frame from [10,20]
+                random_indices = np.random.randint(average_duration, size=self.num_frames_per_clip[modality])
+                # it selects the frame index with respect to the total number
+                # 0+3-> 3rd frame, 10+7->17th frame
+                frame_index = intervals_idx + random_indices
+                # repeat these indices for each clip
+                indices = np.tile(frame_index, self.num_clips)
 
         return indices
 
