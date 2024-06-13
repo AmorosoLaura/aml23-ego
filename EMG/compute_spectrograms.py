@@ -7,7 +7,7 @@ import pandas as pd
 
 import librosa
 import matplotlib.pyplot as plt
-
+import os
 activities_to_classify = [
   'Get/replace items from refrigerator/cabinets/drawers',
   'Peel a cucumber',
@@ -66,33 +66,20 @@ spectrogram = T.Spectrogram(
 
 if __name__ == '__main__':
 
-  
-
+    print(os.getcwd())
     for split in ['train', 'test']:
         next_key=0
+        
         print(split)
         spectrograms={}
    
-        emg_annotations = pd.read_pickle("C:/Users/Laura/Desktop/Universita/Polito/Advanced Machine Learning/Progetto/aml23-ego/new_emg_data_80fs_"+split+".pkl")
+        emg_annotations = pd.read_pickle("./EMG_data/emg/emg_10s_"+split+".pkl")
         
         print(emg_annotations)
         for index, sample in emg_annotations.iterrows():
             signal = torch.from_numpy(sample['emg_data']).float()
             signals=[spectrogram(signal[:, i]) for i in range(16)]
-            
-            """ #signal=cut_and_pad(signal,160,30)
-            for signal in signals: 
-                label=sample['description']
-                if label== 'Get items from refrigerator/cabinets/drawers' or label== 'Replace items from refrigerator/cabinets/drawers' :
-                    spectrograms[next_key]={'spectrogram': signal, 'label': 0}
-            
-                elif label=='Open a jar of almond butter' or label=='Close a jar of almond butter':
-                    spectrograms[next_key]={'spectrogram': signal, 'label': 9}
-            
-                else:
-                    spectrograms[next_key]={'spectrogram': signal, 'label': activities_to_classify.index(sample['description'])}
-                next_key+=1
-            """
+         
             label =sample['description']
             if label== 'Get items from refrigerator/cabinets/drawers' or label== 'Replace items from refrigerator/cabinets/drawers' :
                 
@@ -105,8 +92,6 @@ if __name__ == '__main__':
         
             elif label=='Open a jar of almond butter' or label=='Close a jar of almond butter':
                 if len(spectrograms)==0:
-         
-         
                     spectrograms=pd.DataFrame({'spectrogram': [signals], 'label': [9], 'uid': [sample['uid']], 'file': [sample['file']]})       
                 else:
                     spectrograms.loc[len(spectrograms)] = {'spectrogram': signals, 'label': 9, 'uid': sample['uid'], 'file': sample['file']}        
@@ -123,5 +108,5 @@ if __name__ == '__main__':
         #labels = [value['label'] for value in spectrograms.values()]
 
         
-        with open('C:/Users/Laura/Desktop/Universita/Polito/Advanced Machine Learning/aml23-ego/EMG_data/emg_spectrogram_80fs_'+split+'.pkl', 'wb') as f_pickle:
+        with open('./EMG_data/emg_spectrogram_10s_'+split+'.pkl', 'wb') as f_pickle:
             pickle.dump(spectrograms, f_pickle)

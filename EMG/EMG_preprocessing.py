@@ -139,8 +139,7 @@ def resample_data(data, emg_data_path):
     for file_name in os.listdir(emg_data_path):
         
         file_data = [action for action in data if action.get('file') == file_name]
-        
-        
+
         if len(file_data)  == 0: #in the test split there are no samples for every subject
             continue
 
@@ -253,7 +252,7 @@ def augment_data(data):
 if __name__=='__main__':
 
     
-    EMG_data_path = '../EMG_data/Provided'
+    EMG_data_path = './EMG_data/Provided'
     
     annotations_path = '../action-net'
     #Load all EMG data and split dataset into train and test splits according to annotations files
