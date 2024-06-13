@@ -12,7 +12,7 @@ save:
     RGB: ??
 
 dataset:
-  annotations_path: an_annotations_rgb
+  annotations_path: an_annotations/an_annotations_multimodal_5s
   shift: D1-S04
   workers: 4
   stride: 2
