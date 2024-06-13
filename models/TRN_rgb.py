@@ -5,6 +5,9 @@ import numpy as np
 from utils.logger import logger
 
 class TRN_classifier(torch.nn.Module):
+    
+    #num layer are parameters added just for consistency with the other models
+    #to use just a single train file
     # relation module in multi-scale with a classifier at the end
     def __init__(self, img_feature_dim=1024, num_frames=5, num_classes=20, dropout_prob=0.6, subsample_num=3, num_layers=None):
         super(TRN_classifier, self).__init__()

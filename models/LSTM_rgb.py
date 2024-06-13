@@ -4,6 +4,9 @@ from utils.logger import logger
 
 
 class Lstm_classifier(nn.Module):
+    
+    #num layer are parameters added just for consistency with the other models
+    #to use just a single train file
     def __init__(self, num_classes=20, input_size=1024, hidden_size=512, dropout_prob=0.5, num_layers=1, subsample_num=None):
         super().__init__()
 

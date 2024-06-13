@@ -216,27 +216,12 @@ def validate(model, val_loader, device, it, num_classes):
                 logits[m] = torch.zeros((args.test.num_clips, batch, num_classes)).to(device)
 
             clip = {}
-            if args.aggregation:
-                for m in modalities:
-                    clip[m] = data[m].to(device)
+            for m in modalities:
+                clip[m] = data[m].to(device)
 
-                output, _ = model(clip)
-                for m in modalities:
-                    logits[m] = output[m]
-
-
-            else:
-                for i_c in range(args.train.num_clips):
-                    for m in modalities:
-                        clip[m] = data[m][:, i_c].to(device)
-
-                    output, _ = model(clip)
-                    for m in modalities:
-                        logits[m][i_c] = output[m]
-
-                for m in modalities:
-                    logits[m] = torch.mean(logits[m], dim=0)
-
+            output, _ = model(clip)
+            for m in modalities:
+                logits[m] = output[m]
 
             model.compute_accuracy(logits, label)
 
