@@ -21,14 +21,14 @@ class FullyConnectedFusion(nn.Module):
         feature_emg = self.flatten(feature_emg)
         feature_rgb = self.relu(self.fc1(feature_rgb))
         logger.info(f"feature rgb: {feature_rgb.shape}, feature emg: {feature_emg.shape}")
-        concatenated_feat = torch.cat((feature_emg, feature_rgb.squeeze(dim=1)), dim=1)
+        combined_feat = torch.cat((feature_emg, feature_rgb.squeeze(dim=1)), dim=1)
         
-        #concatenated_feat = torch.cat((feature_emg*0.2, feature_rgb.squeeze(dim=1)*0.8), dim=1)
-        #concatenated_feat=0.2*feature_emg+0.8*feature_rgb.squeeze(dim=1)
-        #concatenated_feat = torch.maximum(feature_emg,feature_rgb.squeeze(dim=1))
+        #combined_feat = torch.cat((feature_emg*0.2, feature_rgb.squeeze(dim=1)*0.8), dim=1)
+        #combined_feat=0.2*feature_emg+0.8*feature_rgb.squeeze(dim=1)
+        #combined_feat = torch.maximum(feature_emg,feature_rgb.squeeze(dim=1))
         
-        concatenated_feat = self.dropout(concatenated_feat)
+        combined_feat = self.dropout(combined_feat)
         #concatenated_feat = self.relu(self.fc2(concatenated_feat))
-        results = self.fc3(concatenated_feat)
+        results = self.fc3(combined_feat)
 
         return results, {}
