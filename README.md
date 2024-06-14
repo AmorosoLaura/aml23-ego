@@ -66,7 +66,7 @@ __train\_classifier*__: these files follow the same structure to train and valid
 
 __plotter__: it is a notebook used to plot the high dimensional features into a 2D space using the TSNE method. 
 
-#### Results
+## Results
 
 The full results of our experiments are contained in the **full_results.xlsx** file. The results are organized through different sheets, according to the task the models are fulfilling, and in tables like this one:
 
