@@ -12,8 +12,7 @@ class FullyConnectedFusion(nn.Module):
         self.fc1 = nn.Linear(256, 50)
         self.dropout = nn.Dropout(dropout_prob)
         self.relu = nn.ReLU()
-        self.fc3 = nn.Linear(100, 20)
-        self.avg_pool = nn.AdaptiveAvgPool1d(1)  # AdaptiveAvgPool1d for averaging along the sequence dimension
+        self.fc2 = nn.Linear(100, 20)
 
     def forward(self, x):
 
@@ -28,7 +27,6 @@ class FullyConnectedFusion(nn.Module):
         #combined_feat = torch.maximum(feature_emg,feature_rgb.squeeze(dim=1))
         
         combined_feat = self.dropout(combined_feat)
-        #concatenated_feat = self.relu(self.fc2(concatenated_feat))
-        results = self.fc3(combined_feat)
+        results = self.fc2(combined_feat)
 
         return results, {}

@@ -103,10 +103,6 @@ if __name__ == '__main__':
                     spectrograms.loc[len(spectrograms)] = {'spectrogram': signals, 'label': activities_to_classify.index(sample['description']), 'uid': sample['uid'], 'file': sample['file']}
             next_key+=1
             
-            #plot_spectrogram(signal)
-        
-        #labels = [value['label'] for value in spectrograms.values()]
-
-        
+            
         with open('./EMG_data/emg_spectrogram_10s_'+split+'.pkl', 'wb') as f_pickle:
             pickle.dump(spectrograms, f_pickle)
