@@ -35,7 +35,7 @@ In some scripts of the run guide other parameters are specified in order to make
 
 ### Structure of the repository
 
-__action-net__: it contains the annotations to divide the ActionSense data into train and test, and other informations about timestamps etc. It also contains a notebook to visualize the spectrograms. 
+__action-net__: it contains the annotations to divide the ActionSense data into train and test, and other information about timestamps etc. It also contains a notebook to visualize the spectrograms. 
 
 __an\_annotations__: it contains the different annotations files needed for the training of the unimodal models (EMG, RGB) and of the multimodal part. The annotations of the RGB and mulitmodal model are the same and share the same folders (an_anntoations_multimodal_*)
 
@@ -47,9 +47,9 @@ __mid\_level\_features__: it contains the already extracted fetaures from both t
 
 __models__: in this folder there are all the proposed models for both the datasets. Each file is named after the model it contains.
 
-__pretrained\i3d__: it contains the weights for the pretrained I3D models.
+__pretrained\_i3d__: it contains the weights for the pretrained I3D models.
 
-__saved\_features_\*__: in these folders we put the features ready to be passed to the model and 
+__saved\_features*__: in these folders we put the features ready to be passed to the model and 
 coming from different configurations of the experiments (number of frames, type of sampling etc.).
 
 __saved\_models__: it containes the weights of the trained models used to then resume them for the multimodal classifier.
@@ -62,7 +62,7 @@ __utils__: it contains some utility functions like the loaders, and the classes 
 
 __save\_feat*__: these files are employed in order to extract the features learnt by different models (I3D, and the EMG and RGB ones for the midlevel fusion in ActionSense). 
 
-__train_classifier_*__: these files follow the same structure to train and validate a model, but they differ mainly in the loaders used and the parameters passed to the models. 
+__train_classifier*__: these files follow the same structure to train and validate a model, but they differ mainly in the loaders used and the parameters passed to the models. 
 
 __plotter__: it is a notebook used to plot the high dimensional features into a 2D space using the TSNE method. 
 
