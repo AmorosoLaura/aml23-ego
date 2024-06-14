@@ -20,7 +20,7 @@ For extracting the RGB features both of Epic Kitchen and ActionSense the images 
 
 ### Training a model
 
-In order to train a model the *train_classifier_\** files were created; the parameters and other configurations can be found at the *config* folder. Here an example taken from the run_guide.ipynb:
+In order to train a model the *train_classifier_\** files were created; the parameters and other configurations can be found at the *configs* folder. Here an example taken from the run_guide.ipynb:
 
 ```python
 %%bash
@@ -34,6 +34,8 @@ python3 train_classifier_ek.py name=model_name \
 In some scripts of the run guide other parameters are specified in order to make different experiments trying values different from the default ones.
 
 ### Structure of the repository
+
+__action-net__: it contains the annotations to divide the ActionSense data into train and test, and other informations about timestamps etc. It also contains a notebook to visualize the spectrograms. 
 __an\_annotations__: it contains the different annotations files needed for the training of the unimodal models (EMG, RGB) and of the multimodal part. The annotations of the RGB and mulitmodal model are the same and share the same folders (an_anntoations_multimodal_*)
 
 __EMG__: this folder contains the necessary code to preprocess the signals, to produce their spectrogram representation and the data of the different subjects. It also contains the emg data extracted but not yet formatted as the classifier expects, that we produced in our first experiments. To then align with the formatting of the train_classifier code but to not change our previous code we used the functions contained in *action_net_features_formatting.ipynb* .
