@@ -62,3 +62,9 @@ __save\_feat\*__: these files are employed in order to extract the features lear
 __train_classifier_\*__: these files follow the same structure to train and validate a model, but they differ mainly in the loaders used and the parameters passed to the models. 
 
 __plotter__: it is a notebook used to plot the high dimensional features into a 2D space using the TSNE method. 
+
+#### Results
+
+The full results of our experiments are contained in the **full_results.xlsx** file. The results are organized through different sheets, according to the task the models are fulfilling, and in tables like this one:
+
+![alt text](images/table_example.png)
