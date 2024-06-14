@@ -54,7 +54,7 @@ coming from different configurations of the experiments (number of frames, type 
 
 __saved\_models__: it containes the weights of the trained models used to then resume them for the multimodal classifier.
 
-__tasks__: it contains a wrapper class to define common method to the classifiers in order to ease the training process. 
+__tasks__: it contains a wrapper class to define common methods to the classifiers in order to ease the training process. 
 
 __train\_val__: contains the annotations file for the epic kitchen dataset.
 
