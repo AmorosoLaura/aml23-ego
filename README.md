@@ -57,9 +57,9 @@ __train\_val__: contains the annotations file for the epic kitchen dataset.
 
 __utils__: it contains some utility functions like the loaders, and the classes that define the records for Epic Kitchen and ActionSense, with their attributes. 
 
-__save\_feat\*__: these files are employed in order to extract the features learnt by different models (I3D, and the EMG and RGB ones for the midlevel fusion in ActionSense). 
+__save\_feat*__: these files are employed in order to extract the features learnt by different models (I3D, and the EMG and RGB ones for the midlevel fusion in ActionSense). 
 
-__train_classifier_\*__: these files follow the same structure to train and validate a model, but they differ mainly in the loaders used and the parameters passed to the models. 
+__train_classifier_*__: these files follow the same structure to train and validate a model, but they differ mainly in the loaders used and the parameters passed to the models. 
 
 __plotter__: it is a notebook used to plot the high dimensional features into a 2D space using the TSNE method. 
 
