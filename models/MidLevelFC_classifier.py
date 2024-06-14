@@ -8,8 +8,7 @@ class FullyConnectedFusion(nn.Module):
         super().__init__()
 
         self.flatten = nn.Flatten()
-        #input dimesnion is 2500 in case of features 5 s    
-        self.fc1 = nn.Linear(256, 50)
+        self.fc1 = nn.Linear(512, 50)
         self.dropout = nn.Dropout(dropout_prob)
         self.relu = nn.ReLU()
         self.fc2 = nn.Linear(100, 20)
